@@ -14,14 +14,12 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ReceiveService extends Service {
-    private Socket socket;
     private String TAG = "ReceiveService";
-
+    private Socket socket;
     private Runnable reader = new Runnable() {
         @Override
         public void run() {
             try {
-                socket = new Socket(MainActivity.ip, 9502);
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 //PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
                 String msg;
@@ -57,6 +55,9 @@ public class ReceiveService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        try {
+            socket = new Socket(MainActivity.ip, 9502);
+        } catch(Exception e) { e.printStackTrace(); }
         new Thread(reader).start();
     }
 
