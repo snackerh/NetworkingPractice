@@ -16,15 +16,19 @@ import java.net.Socket;
 public class ReceiveService extends Service {
     private String TAG = "ReceiveService";
     private Socket socket;
+    BufferedReader in;
+
+    boolean isRunning = false;
+
     private Runnable reader = new Runnable() {
         @Override
         public void run() {
             try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 //PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
                 String msg;
                 String[] splitmsg;
-                while (true) {
+                while (isRunning) {
                     msg = in.readLine();
                     Log.d(TAG, "Received message: " + msg);
                     splitmsg = msg.split(">");
@@ -57,12 +61,21 @@ public class ReceiveService extends Service {
         super.onCreate();
         try {
             socket = new Socket(MainActivity.ip, 9502);
+            isRunning = true;
         } catch(Exception e) { e.printStackTrace(); }
         new Thread(reader).start();
     }
 
     @Override
     public void onDestroy() {
+        try{
+            isRunning = false;
+
+            in.close();
+            socket.close();
+        } catch(Exception e) {
+
+        }
         super.onDestroy();
     }
 }

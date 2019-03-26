@@ -10,9 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name=".SocketService"
+            android:name=".ReceiveService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true"
+            android:process=":ReceiveService"></service>
 
         <activity android:name=".MainActivity">
             <intent-filter>
