@@ -9,6 +9,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 import java.net.Socket;
@@ -38,13 +39,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, ReceiveService.class);
+        final Intent intent = new Intent(this, ReceiveService.class);
         startService(intent);
 
         connectBtn = findViewById(R.id.ConnectButton);
+        connectBtn.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                bindService(intent, conn, Context.BIND_AUTO_CREATE);
+            }
+        });
+
         disconnectBtn = findViewById(R.id.DisconnectButton);
 
-        bindService(intent, conn, Context.BIND_AUTO_CREATE);
+
     }
 
     @Override
